@@ -46,10 +46,21 @@ require __DIR__.'/../vendor/autoload.php';
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-$kernel = $app->make(Kernel::class);
+use App\Services\Leitor;
 
-$response = $kernel->handle(
-    $request = Request::capture()
-)->send();
+// TXT
+$leitorTXT = new Leitor();
+$leitorTXT->setDiretorio(__DIR__.'/arquivos');
+$leitorTXT->setArquivo('dados.txt');
+$arr_txt = $leitorTXT->lerArquivo();
 
-$kernel->terminate($request, $response);
+// CSV
+$leitorCSV = new Leitor();
+$leitorCSV->setDiretorio(__DIR__.'/arquivos');
+$leitorCSV->setArquivo('dados.csv');
+$arr_csv = $leitorCSV->lerArquivo();
+
+// Merge
+echo '<pre>';
+print_r(array_merge($arr_txt, $arr_csv));
+echo '</pre>';
